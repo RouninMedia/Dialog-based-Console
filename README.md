@@ -128,4 +128,128 @@ A pop-up console based on the HTML5 `<dialog>` element and its API.
 
 ```js
 
+const successConsole = document.getElementsByClassName('console')[0];
+const gameoverConsole = document.getElementsByClassName('console')[1];
+
+const closeConsole = () => {
+
+  let header = document.querySelector('header');
+  let currentConsole = document.querySelector('dialog[open]');
+  document.removeEventListener('keydown', closeConsoleOnEnter);
+
+  currentConsole.close();
+  let console = '--' + document.body.dataset.console;
+  document.body.removeAttribute('data-console');
+  document.body.removeAttribute('style');
+  header.classList.add(console);
+  header.setAttribute('title', 'Click to play another game of Wordis³h...!');
+  document.querySelector('h1').style.setProperty('pointer-events', 'none');
+      
+  document.querySelector('header').addEventListener('click', (e) => {
+    window.location.reload();
+  }, false);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {window.location.reload();}
+  });
+}
+
+
+const closeConsoleOnEnter = (e) => {
+
+  if (e.key === 'Enter') {
+
+    closeConsole();
+  }
+}
+
+
+const revealConsole = (consoleName) => {
+
+  document.removeEventListener('keydown', clickKey, false);
+
+  setTimeout(() => {
+
+    document.body.dataset.console = consoleName;
+    document.body.style.setProperty('overflow', 'hidden');
+    document.body.style.setProperty('cursor', 'pointer');
+    document.querySelector('.keyboard').classList.add('--disabled');
+
+    let currentConsole;
+    let consoleRowIndex;
+
+    if (consoleName === 'gameover') {
+
+      currentConsole = gameoverConsole;
+
+      for (let i = 14; (i + 1) > 0; i--) {
+
+        if (consoleRowIndex !== undefined) break;
+
+        for (let j = 0; j < 6; j++) {
+
+          if (rowScores[j][1] === i) {
+
+            consoleRowIndex = j;
+          }
+        }
+      }
+    }
+
+
+    else if (consoleName === 'success') {
+
+      currentConsole = successConsole;
+      consoleRowIndex = targetRowIndex;
+    }
+
+    
+    for (let i = (consoleRowIndex * 5); i < (consoleRowIndex * 5 + 5); i++) {
+
+      let consoleLetter = letters[i].cloneNode(true);
+      consoleLetter.classList.remove('--current');
+      consoleLetter.classList.remove('--reveal');
+      consoleLetter.classList.remove('--wordRevealed');
+      consoleLetter.classList.add('--transparentLetter');
+      currentConsole.getElementsByClassName('consoleAnswer')[0].appendChild(consoleLetter);
+    }
+
+    currentConsole.show();
+    currentConsole.classList.add('--' + consoleName);
+    currentConsole.classList.remove('--hidden');
+    
+    [...currentConsole.getElementsByClassName('letter')].forEach((box, i) => {
+
+      setTimeout(() => {
+        box.classList.remove('--transparentLetter');
+        conditionalPlay(keyPress);
+      }, (1600 + (i * 300)));
+
+      setTimeout(() => {
+        box.classList.add('--reveal');
+      }, (3200 + (i * 100)));
+
+    });
+
+    setTimeout(() => {repeatAudio(letterReveal, 5);}, 3200);
+
+    document.addEventListener('keydown', closeConsoleOnEnter);
+    document.body.addEventListener('click', closeConsole, {once: true, capture: false});
+
+  }, 1900);
+}
+
+if (consoleCondition === true) {
+
+  if (success === true) {
+  
+    revealConsole('success');
+  }
+  
+  else if (gameover === true) {
+  
+    revealConsole('gameover');
+  }
+}
+
 ```
