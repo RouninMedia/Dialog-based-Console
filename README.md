@@ -22,6 +22,8 @@ A pop-up console based on the HTML5 `<dialog>` element and its API.
 
 ```
 
+______
+
 ## CSS
 
 ```css
@@ -123,6 +125,7 @@ A pop-up console based on the HTML5 `<dialog>` element and its API.
 }
 
 ```
+_____
 
 ## JavaScript
 
