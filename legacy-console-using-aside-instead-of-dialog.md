@@ -32,34 +32,46 @@ ______
   position: absolute;
   top: 0;
   left: 0;
-  width: 80vw;
-  max-width: 600px;
-  margin: 12.5vh auto;
+  width: 600px;
+  margin: 12.5vh calc((100vw - 600px) / 2);
   padding-bottom: 54px;
   color: rgb(255, 255, 255);
   font-family: sans-serif;
   text-align: center;
-  border-width: 3px;
   border-radius: 9px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0);
-  transform: translateY(0);
+  opacity: 0;
+  box-sizing: border-box;
+  transform: translateY(100vh);
   transition: box-shadow 1.2s ease-out, transform 0.9s ease-out 0.6s;
 }
 
-.console.\--hidden {
-  transform: translateY(100vh);
+.console.\--open {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .console.\--success {
   background-color: var(--correctBackground);
-  border: var(--correctBorder);
-  box-shadow: 0 0 0 100vmax rgba(0, 91, 31, 0.9);
+  border: 12px solid var(--correctBorder);
 }
 
 .console.\--gameover {
   background-color: var(--gameoverBackground);
-  border: var(--gameoverBorder);
+  border: 12px solid var(--gameoverBorder);
+}
+
+.console.\--success.\--open {
+  box-shadow: 0 0 0 100vmax rgba(0, 91, 31, 0.9);
+}
+
+.console.\--gameover.\--open {
   box-shadow: 0 0 0 100vmax rgba(127, 0, 0, 0.9);
+}
+
+.console.\--success.\--closing,
+.console.\--gameover.\--closing {
+  transition: transform 1.2s ease-out, box-shadow 0.9s ease-out 0.6s, opacity 0s linear 1.5s;
 }
 
 [class^="console"] {
@@ -87,28 +99,52 @@ ______
 }
 
 .console.\--success .consoleAnswer {
-  border: var(--correctBorder);
+  border: 6px solid var(--correctBorder);
 }
 
 .console.\--gameover .consoleAnswer {
-  border: var(--gameoverBorder);
+  border: 6px solid var(--gameoverBorder);
 }
 
 .consoleAnswer .letter {
+  position: relative;
+  z-index: 6;
   display: inline-block;
   width: 45px;
   height: 45px;
   margin: 3px;
+  border-width: 3px;
 }
 
 .consoleAnswer .letter.\--transparentLetter {
   color: rgba(0, 0, 0, 0);
+  text-shadow: none;
 }
 
-@media only screen and (max-width: 540px) {
+
+@media screen and (max-width: 750px) {
+  
+  .console {
+    width: 80vw;
+    margin: 12.5vh 10vw;
+  }
+}
+
+
+@media screen and (max-width: 500px),
+       screen and (max-height: 560px) {
 
   .console {
-    width: 86vw;
+    width: 92vw;
+    margin: 12.5vh 4vw;
+  }
+
+  .console.\--success {
+    border: 9px solid var(--correctBorder);
+  }
+
+  .console.\--gameover {
+    border: 9px solid var(--gameoverBorder);
   }
 
   .consoleHeading,
