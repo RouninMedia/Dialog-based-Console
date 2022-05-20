@@ -1,24 +1,24 @@
-# Dialog-based Console
-A pop-up console based on the HTML5 `<dialog>` element and its API.
+# Legacy Console (using `<aside>` instead of `<dialog>`)
+An alternative for older browsers which do not recognise `<dialog>`
 
 ## HTML
 
 ```html
 
-<dialog class="console --hidden">
+<aside class="console --success">
 <h2 class="consoleHeading">Congratulations!</h2>
 <p class="consoleParagraph">The correct answer is:</p>
 <p class="consoleAnswer"></p>
 <p class="consoleParagraph">You beat <strong>Wordis³h</strong> in</p>
 <p class="consoleGuessNumber">0 guesses</p>
-</dialog>
+</aside>
 
-<dialog class="console --hidden">
+<aside class="console --gameover">
 <h2 class="consoleHeading">Bad Luck!</h2>
 <p class="consoleParagraph">Your best guess was:</p>
 <p class="consoleAnswer"></p>
 <p class="consoleParagraph">Better luck with <strong>Wordis³h</strong> next time!</p>
-</dialog>
+</aside>
 
 ```
 
