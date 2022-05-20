@@ -167,30 +167,26 @@ _____
 
 ```js
 
-const successConsole = document.getElementsByClassName('console')[0];
-const gameoverConsole = document.getElementsByClassName('console')[1];
+const successConsole = document.querySelector('.console.\--success');
+const gameoverConsole = document.querySelector('.console.\--gameover');
 
 const closeConsole = () => {
 
-  let header = document.querySelector('header');
-  let currentConsole = document.querySelector('dialog[open]');
+  let currentConsole = document.querySelector('.console.\--open');
   document.removeEventListener('keydown', closeConsoleOnEnter);
 
-  currentConsole.close();
-  let console = '--' + document.body.dataset.console;
-  document.body.removeAttribute('data-console');
-  document.body.removeAttribute('style');
-  header.classList.add(console);
-  header.setAttribute('title', 'Click to play another game of Wordis³h...!');
-  document.querySelector('h1').style.setProperty('pointer-events', 'none');
-      
-  document.querySelector('header').addEventListener('click', (e) => {
-    window.location.reload();
-  }, false);
+  currentConsole.classList.add('--closing');
+  currentConsole.classList.remove('--open');
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {window.location.reload();}
-  });
+  document.body.removeAttribute('style');
+  wordgrid.classList.remove('--grayscaled');
+  keyboard.classList.remove('--grayscaled');
+
+  header.classList.add('--nextGame');
+  header.setAttribute('title', 'Click to play another game of Wordis³h...!');
+  header.addEventListener('click', initialiseWordish, false);
+
+  document.addEventListener('keydown', initialiseOnEnter);
 }
 
 
@@ -204,20 +200,23 @@ const closeConsoleOnEnter = (e) => {
 
 
 const revealConsole = (consoleName) => {
-
+  
   document.removeEventListener('keydown', clickKey, false);
 
   setTimeout(() => {
 
-    document.body.dataset.console = consoleName;
-    document.body.style.setProperty('overflow', 'hidden');
     document.body.style.setProperty('cursor', 'pointer');
-    document.querySelector('.keyboard').classList.add('--disabled');
+    keyboard.classList.add('--disabled');
+    keyboard.classList.add('--grayscaled');
+    wordgrid.classList.add('--grayscaled');
+    header.classList.add('--' + consoleName);
 
     let currentConsole;
     let consoleRowIndex;
 
     if (consoleName === 'gameover') {
+
+      document.body.style.setProperty('background-color', 'var(--gameoverBackground)');
 
       currentConsole = gameoverConsole;
 
@@ -238,6 +237,8 @@ const revealConsole = (consoleName) => {
 
     else if (consoleName === 'success') {
 
+      document.body.style.setProperty('background-color', 'var(--correctBackground)');
+
       currentConsole = successConsole;
       consoleRowIndex = targetRowIndex;
     }
@@ -253,20 +254,19 @@ const revealConsole = (consoleName) => {
       currentConsole.getElementsByClassName('consoleAnswer')[0].appendChild(consoleLetter);
     }
 
-    currentConsole.show();
-    currentConsole.classList.add('--' + consoleName);
-    currentConsole.classList.remove('--hidden');
+    currentConsole.classList.add('--open');
     
-    [...currentConsole.getElementsByClassName('letter')].forEach((box, i) => {
+    [...currentConsole.getElementsByClassName('letter')].forEach((box, j) => {
 
       setTimeout(() => {
         box.classList.remove('--transparentLetter');
         conditionalPlay(keyPress);
-      }, (1600 + (i * 300)));
+      }, (1600 + (j * 300)));
 
+      
       setTimeout(() => {
         box.classList.add('--reveal');
-      }, (3200 + (i * 100)));
+      }, 3200);
 
     });
 
@@ -276,19 +276,6 @@ const revealConsole = (consoleName) => {
     document.body.addEventListener('click', closeConsole, {once: true, capture: false});
 
   }, 1900);
-}
-
-if (consoleCondition === true) {
-
-  if (success === true) {
-  
-    revealConsole('success');
-  }
-  
-  else if (gameover === true) {
-  
-    revealConsole('gameover');
-  }
 }
 
 ```
